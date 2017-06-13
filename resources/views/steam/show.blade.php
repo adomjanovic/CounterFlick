@@ -21,7 +21,8 @@
             <div class="show-profile-link">
                 <a href="{{ $player->profileurl }}"><img src="public/images/steamicon.png" style="width: 25px; height: 25x;">{{ $player->personaname }} </a> |
                 <img src="http://cdn.steamcommunity.com/public/images/countryflags/{{ $country }}.gif" alt=""> |
-                <a href="{{route('steam-user-comparison',[$steamid]) }}">Compare</a>
+                <a href="{{route('steam-user-comparison',[$steamid]) }}">Compare</a> |
+                <a href="{{route('steam-pdf-generate',[$steamid]) }}" target="_blank">Stats to PDF</a>
                 <h5>Last online: {{ $date }}</h5>
             </div>
             @php

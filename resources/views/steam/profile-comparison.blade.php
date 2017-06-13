@@ -94,8 +94,12 @@
     $arrayNaslovi[20] = 'Gun rounds won';
 
     @endphp
-    <div class="comparison">
-        <h1>Player comparison</h1>
+    <div class="comparison"><br>
+        <div class="show-profile-full">
+            <img src="{{ $player->avatarmedium }}" >
+            <a href="{{route('steam-user',[$player->steamid])}}"><h3>Back to profile stats</h3></a></img>
+        </div>
+        <h1>Comparison</h1>
         <table class="comparison-table">
             <tr>
                 <td class="profile-found">

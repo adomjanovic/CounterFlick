@@ -116,6 +116,7 @@ class Kint
         'Kint_Parser_ClassStatics',
         'Kint_Parser_Closure',
         'Kint_Parser_Color',
+        'Kint_Parser_DateTime',
         'Kint_Parser_DOMIterator',
         'Kint_Parser_DOMNode',
         'Kint_Parser_FsPath',
@@ -128,6 +129,7 @@ class Kint
         'Kint_Parser_SplObjectStorage',
         'Kint_Parser_Stream',
         'Kint_Parser_Table',
+        'Kint_Parser_Throwable',
         'Kint_Parser_Timestamp',
         'Kint_Parser_ToString',
         'Kint_Parser_Trace',
@@ -318,7 +320,7 @@ class Kint
                 $trace[] = $frame;
             }
 
-            $lastframe = array_shift($trace);
+            $lastframe = reset($trace);
             $tracename = $lastframe['function'].'(1)';
             if (isset($lastframe['class'], $lastframe['type'])) {
                 $tracename = $lastframe['class'].$lastframe['type'].$tracename;
@@ -386,40 +388,40 @@ class Kint
      */
     public static function shortenPath($file)
     {
-        $file = str_replace('\\', '/', $file);
-        $shortenedName = $file;
-        $replaced = false;
-        if (is_array(self::$app_root_dirs)) {
-            foreach (self::$app_root_dirs as $path => $replaceString) {
-                if (empty($path)) {
-                    continue;
-                }
+        $file = array_values(array_filter(explode('/', str_replace('\\', '/', $file)), 'strlen'));
 
-                $path = str_replace('\\', '/', $path);
+        $longest_match = 0;
+        $match = '/';
 
-                if (strpos($file, $path) === 0) {
-                    $shortenedName = $replaceString.substr($file, strlen($path));
-                    $replaced = true;
-                    break;
-                }
+        foreach (self::$app_root_dirs as $path => $alias) {
+            if (empty($path)) {
+                continue;
+            }
+
+            $path = array_values(array_filter(explode('/', str_replace('\\', '/', $path)), 'strlen'));
+
+            if (array_slice($file, 0, count($path)) === $path && count($path) > $longest_match) {
+                $longest_match = count($path);
+                $match = $alias;
             }
         }
 
-        // fallback to find common path with Kint dir
-        if (!$replaced) {
-            $pathParts = explode('/', str_replace('\\', '/', KINT_DIR));
-            $fileParts = explode('/', $file);
-            $i = 0;
-            foreach ($fileParts as $i => $filePart) {
-                if (!isset($pathParts[$i]) || $pathParts[$i] !== $filePart) {
-                    break;
+        if ($longest_match) {
+            $file = array_merge(array($match), array_slice($file, $longest_match));
+
+            return implode('/', $file);
+        } else {
+            // fallback to find common path with Kint dir
+            $kint = array_values(array_filter(explode('/', str_replace('\\', '/', KINT_DIR)), 'strlen'));
+
+            foreach ($file as $i => $part) {
+                if (!isset($kint[$i]) || $kint[$i] !== $part) {
+                    return ($i ? '.../' : '/').implode('/', array_slice($file, $i));
                 }
             }
 
-            $shortenedName = ($i ? '.../' : '').implode('/', array_slice($fileParts, $i));
+            return '/'.implode('/', $file);
         }
-
-        return $shortenedName;
     }
 
     public static function getIdeLink($file, $line)

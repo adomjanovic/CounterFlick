@@ -70,10 +70,10 @@ body {
     padding-left: 10px;
 }
 .container .left-sidebar {
-    width: 15%;
+    width: 20%;
     height: 90%;
     float: left;
-    padding: 10px 20px;
+    padding: 10px 0 0 15px;
 }
 
 .container .right-sidebar {
@@ -85,6 +85,19 @@ body {
 
 .container .right-sidebar h1 {
     text-align: center;
+}
+.container .left-sidebar h1 {
+    text-align: center;
+}
+
+.disclaimer {
+    position:fixed;
+    width: 100%;
+    left: 5px;
+    bottom: 10px;
+}
+.disclaimer h4 {
+  text-align:center;
 }
 
 #header {
@@ -101,7 +114,7 @@ body {
 
 #header a, #header h1 , #header p{
     padding-left: 5px;
-    display: inline-block;
+    display: inline;
     color: #f7f7f7;
 }
 
@@ -323,6 +336,7 @@ body {
 .comparison h1 {
     text-align: center;
     padding: 20px;
+    margin-left: -100px;
 }
 
 .comparison-table {
@@ -351,4 +365,25 @@ th {
 
 .comparison-table .min {
     color: #e4524b;
+}
+
+.show-profile-stats-pdf {
+    margin-left: auto;
+    padding: 0px;
+}
+
+.show-profile-pdf h3,h4{
+    color: #0bb3d6;
+    display: inline;
+}
+.show-profile-stats-pdf p {
+    display: inline;
+    font-size: 14px;
+}
+
+.show-profile-img-pdf {
+    min-width: 100px;
+    min-height: 100px;
+    padding: 5px 0 0 75px;
+    float: left;
 }

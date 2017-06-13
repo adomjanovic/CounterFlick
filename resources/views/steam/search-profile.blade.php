@@ -1,16 +1,8 @@
 @php
-    $steamId = $_POST['steamid'];
-
-    if (preg_match('/[\'^£$%&*()}{@#~?><>.,|=+¬-]/', $steamId)) {
-        //samo ime
+    if (!empty($_POST['steamid'])) {
+        $steamId = $_POST['steamid'];
     }
-    // provjere i trazenje korisnika ovisno lkako je unesen uer
-    $string = file_get_contents("http://steamcommunity.com/profiles/76561198018175469/");
-    if (strpos($string, 'steamid') !== false) {
-        $seedString = "steamid";
-        $sub= substr($string,strpos($string,$seedString)+10,17);
-    }
-
+    $url = $obj = '';
     if (is_numeric($steamId)) {
         $url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=23E38BACEF40A739B05B305A8487184C&steamids='.$steamId;
     } else {
@@ -44,8 +36,10 @@
             }
         }
     }
-    $json = file_get_contents($url);
-    $obj = json_decode($json);
+    if ($url) {
+        $json = file_get_contents($url);
+        $obj = json_decode($json);
+    }
     $player = 0;
     if ($obj) {
         $player = $obj->response->players;

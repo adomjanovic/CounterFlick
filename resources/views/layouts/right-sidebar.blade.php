@@ -11,7 +11,7 @@
         $url = $news->url;
         $date = date('d.m.Y', $news->date);
         @endphp
-            <h4>{{ $date }} - <a href="{{ $url }}">{{ $title }}</a></h4>
+            <h4>{{ $date }} </h4> <p><a href="{{ $url }}" target="_blank">{{ $title }} </a></p>
         @php
     }
     @endphp

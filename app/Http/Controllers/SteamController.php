@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
+use PDF;
 
 class SteamController extends Controller
 {
@@ -34,5 +37,17 @@ class SteamController extends Controller
     public function comparison($steamid1)
     {
         return view('steam.profile-comparison', compact('steamid1'));
+    }
+    public function logout()
+    {
+        Session::forget('steam-id');
+        return Redirect::to(Session::get('page'));
+    }
+    public function generatePdf($steamid)
+    {
+        Session::put('steamid', $steamid);
+        $pdf = PDF::loadView('steam.pdf');
+        Session::forget('steamid');
+    	return $pdf->stream('statistic.pdf');
     }
 }

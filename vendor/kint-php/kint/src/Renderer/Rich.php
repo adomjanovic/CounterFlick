@@ -96,10 +96,13 @@ class Kint_Renderer_Rich extends Kint_Renderer
             'caller' => null,
         );
 
-        $this->mod_return = in_array('@', $params['modifiers']);
         $this->callee = $params['callee'];
         $this->mini_trace = $params['minitrace'];
         $this->previous_caller = $params['caller'];
+
+        if (isset($params['settings']['return'])) {
+            $this->mod_return = $params['settings']['return'];
+        }
 
         if (isset($params['settings']['file_link_format'])) {
             $this->file_link_format = $params['settings']['file_link_format'];
@@ -155,7 +158,7 @@ class Kint_Renderer_Rich extends Kint_Renderer
         $out .= $contents;
 
         if (!empty($ap)) {
-            $out .= '<div class="access-path">'.Kint_Object_Blob::escape($ap).'</div>';
+            $out .= '<div class="access-path">'.$this->escape($ap).'</div>';
         }
 
         return $out.'</dt>';
@@ -170,16 +173,16 @@ class Kint_Renderer_Rich extends Kint_Renderer
         }
 
         if (($s = $o->getName()) !== null) {
-            $output .= '<dfn>'.Kint_Object_Blob::escape($s).'</dfn> ';
+            $output .= '<dfn>'.$this->escape($s).'</dfn> ';
 
             if ($s = $o->getOperator()) {
-                $output .= Kint_Object_Blob::escape($s, 'ASCII').' ';
+                $output .= $this->escape($s, 'ASCII').' ';
             }
         }
 
         if (($s = $o->getType()) !== null) {
             if (self::$escape_types) {
-                $s = Kint_Object_Blob::escape($s);
+                $s = $this->escape($s);
             }
 
             if ($o->reference) {
@@ -191,7 +194,7 @@ class Kint_Renderer_Rich extends Kint_Renderer
 
         if (($s = $o->getSize()) !== null) {
             if (self::$escape_types) {
-                $s = Kint_Object_Blob::escape($s);
+                $s = $this->escape($s);
             }
             $output .= '('.$s.') ';
         }
@@ -202,7 +205,7 @@ class Kint_Renderer_Rich extends Kint_Renderer
             if (self::$strlen_max && Kint_Object_Blob::strlen($s) > self::$strlen_max) {
                 $s = substr($s, 0, self::$strlen_max).'...';
             }
-            $output .= Kint_Object_Blob::escape($s);
+            $output .= $this->escape($s);
         }
 
         return trim($output);
@@ -239,7 +242,7 @@ class Kint_Renderer_Rich extends Kint_Renderer
                     $output .= '<li>';
                 }
 
-                $output .= Kint_Object_Blob::escape($tab->getLabel()).'</li>';
+                $output .= $this->escape($tab->getLabel()).'</li>';
             }
 
             $output .= '</ul><ul>';
@@ -283,7 +286,7 @@ class Kint_Renderer_Rich extends Kint_Renderer
             }
 
             if ($show_contents) {
-                return '<pre>'.Kint_Object_Blob::escape($rep->contents)."\n</pre>";
+                return '<pre>'.$this->escape($rep->contents)."\n</pre>";
             }
         } elseif ($rep->contents instanceof Kint_Object) {
             return $this->render($rep->contents);
@@ -405,6 +408,28 @@ class Kint_Renderer_Rich extends Kint_Renderer
         return $output;
     }
 
+    public function escape($string, $encoding = false)
+    {
+        if ($encoding === false) {
+            $encoding = Kint_Object_Blob::detectEncoding($string);
+        }
+
+        $original_encoding = $encoding;
+
+        if ($encoding === false || $encoding === 'ASCII') {
+            $encoding = 'UTF-8';
+        }
+
+        $string = htmlspecialchars($string, ENT_NOQUOTES, $encoding);
+
+        // this call converts all non-ASCII characters into numeirc htmlentities
+        if ($original_encoding !== 'ASCII' && function_exists('mb_encode_numericentity')) {
+            $string = mb_encode_numericentity($string, array(0x80, 0xffff, 0, 0xffff), $encoding);
+        }
+
+        return $string;
+    }
+
     protected function getPlugin(array $plugins, array $hints)
     {
         if ($plugins = $this->matchPlugins($plugins, $hints)) {
@@ -420,7 +445,7 @@ class Kint_Renderer_Rich extends Kint_Renderer
 
     protected function ideLink($file, $line)
     {
-        $shortenedPath = Kint_Object_Blob::escape(Kint::shortenPath($file));
+        $shortenedPath = $this->escape(Kint::shortenPath($file));
         if (!$this->file_link_format) {
             return $shortenedPath.':'.$line;
         }
