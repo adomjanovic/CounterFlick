@@ -50,4 +50,8 @@ class SteamController extends Controller
         Session::forget('steamid');
     	return $pdf->stream('statistic.pdf');
     }
+    public function showStatsGraph($steamid)
+    {
+        return view('steam.show-graph', compact('steamid'));
+    }
 }

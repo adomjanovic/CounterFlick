@@ -19,10 +19,11 @@
                 <img src="{{ $player->avatarfull }}" >
             </div>
             <div class="show-profile-link">
-                <a href="{{ $player->profileurl }}"><img src="public/images/steamicon.png" style="width: 25px; height: 25x;">{{ $player->personaname }} </a> |
+                <a href="{{ $player->profileurl }}" target="_blank"><img src="public/images/steamicon.png" style="width: 25px; height: 25x;">{{ $player->personaname }} </a> |
                 <img src="http://cdn.steamcommunity.com/public/images/countryflags/{{ $country }}.gif" alt=""> |
                 <a href="{{route('steam-user-comparison',[$steamid]) }}">Compare</a> |
-                <a href="{{route('steam-pdf-generate',[$steamid]) }}" target="_blank">Stats to PDF</a>
+                <a href="{{route('steam-pdf-generate',[$steamid]) }}" target="_blank">Stats to PDF</a> |
+                <a href="{{route('steam-stats-graph',[$steamid]) }}" target="_blank">Stats Graph</a>
                 <h5>Last online: {{ $date }}</h5>
             </div>
             @php
@@ -67,6 +68,57 @@
                 }
                 $i++;
             }
+            if ($steamid == Session::get('steam-id')) {
+                @endphp
+                <script type="text/javascript">
+                var dateUpdate = Date.now();
+                var steamid = {!! $steamid !!};
+                var counter = localStorage.length - 1;
+                var lastStat = localStorage.getItem('counter_flick_' + steamid + '_' + counter);
+                var diff = 0;
+                if (lastStat && counter != -1) {
+                    lastStat = JSON.parse(lastStat);
+                    var lastUpdate = lastStat.timestamp;
+                    diff = dateUpdate - lastUpdate - 172800000;
+                } else if (!lastStat && counter != -1) {
+                    for(counter; counter >= 0; counter--) {
+                        var lastStat = localStorage.getItem('counter_flick_' + steamid + '_' + counter);
+                        if (lastStat) {
+                            break;
+                        }
+                    }
+                }
+                console.log(diff);
+                if (lastStat && diff > 0) {
+                    var counter = localStorage.length;
+                    var stats = {
+                        'total_kills' : {!! $userArray['total_kills'] !!},
+                        'total_deaths' : {!! $userArray['total_deaths'] !!},
+                        'time_played' : {!! round($userArray['total_time_played']/3600) !!},
+                        'win' : {!! round($userArray['total_wins'] / $userArray['total_rounds_played'] * 100,1) !!},
+                        'headshoots' : {!! round($userArray['total_kills_headshot']/$userArray['total_kills'] * 100,2) !!},
+                        'accuracy' : {!! round($userArray['total_shots_hit']/$userArray['total_shots_fired'] * 100 ,2) !!},
+                        'timestamp': dateUpdate
+                    };
+                    var json = JSON.stringify(stats);
+                    localStorage.setItem('counter_flick_' + steamid + '_' + counter, json);
+                } else if (counter == -1) {
+                    var counter = localStorage.length;
+                    var stats = {
+                        'total_kills' : {!! $userArray['total_kills'] !!},
+                        'total_deaths' : {!! $userArray['total_deaths'] !!},
+                        'time_played' : {!! round($userArray['total_time_played']/3600) !!},
+                        'win' : {!! round($userArray['total_wins'] / $userArray['total_rounds_played'] * 100,1) !!},
+                        'headshoots' : {!! round($userArray['total_kills_headshot']/$userArray['total_kills'] * 100,2) !!},
+                        'accuracy' : {!! round($userArray['total_shots_hit']/$userArray['total_shots_fired'] * 100 ,2) !!},
+                        'timestamp': dateUpdate
+                    };
+                    var json = JSON.stringify(stats);
+                    localStorage.setItem('counter_flick_' + steamid + '_' + counter, json);
+                }
+                </script>
+                @php
+            }
     }
     @endphp
     <div class="show-profile-stats">
@@ -79,7 +131,6 @@
         <h3>HEADSHOOTS%:</h3> <p>{{ round($userArray['total_kills_headshot']/$userArray['total_kills'] * 100,2) }} %</p>
         <h3>ACCURACY%: </h3><p>{{ round($userArray['total_shots_hit']/$userArray['total_shots_fired'] * 100 ,2) }} %</p>
     </div>
-
     <div class="column-left">
         <a href="{{route('steam-user-achievements',[$steamid])}}">
             <h2>ACHIEVEMENTS</h2>

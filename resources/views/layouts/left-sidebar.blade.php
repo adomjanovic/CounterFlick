@@ -10,8 +10,8 @@
     <p>compare two players</p>
     <h4>RANDOM STATS</h4>
     <p>window broken, enemy blinded kills, zeus kills...</p>
-    <h4>LEAVE COMMENTS*</h4>
-    <p>you can leave comments on players statistic wall</p>
+    <h4>TRACK YOU HISTORY*</h4>
+    <p>you can see your progress among time period</p>
     <h4>SHARE STATISTIC*</h4>
     <p>share on social networks or print for yourself</p>
     <div class="disclaimer">

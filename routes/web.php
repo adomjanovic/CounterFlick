@@ -22,3 +22,4 @@ Route::get('/{steamid}/achievements', [ 'as'=>'steam-user-achievements', 'uses'=
 Route::get('/comparison/{steamid1?}', ['as' =>'steam-user-comparison', 'uses'=>'SteamController@comparison']);
 Route::get('/steam/logout', ['as' => 'steam-logout', 'uses' => 'SteamController@logout']);
 Route::get('/steam/pdf/{steamid?}', ['as' => 'steam-pdf-generate', 'uses' => 'SteamController@generatePdf']);
+Route::get('/steam/graph/{steamid?}', ['as' => 'steam-stats-graph', 'uses' => 'SteamController@showStatsGraph']);

@@ -3,7 +3,7 @@
 @include('layouts.left-sidebar')
 @include('layouts.right-sidebar')
 <div class="centar">
-    @include('layouts.search-box')
+@include('layouts.search-box')
 @php
     $params = array(
         'openid.ns'         => 'http://specs.openid.net/auth/2.0',
