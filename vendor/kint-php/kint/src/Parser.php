@@ -247,8 +247,9 @@ class Kint_Parser
             $child->depth = $object->depth + 1;
             $child->owner_class = $object->classname;
             $child->operator = Kint_Object::OPERATOR_OBJECT;
+            $child->access = Kint_Object::ACCESS_PUBLIC;
 
-            $split_key = explode("\0", $key);
+            $split_key = explode("\0", $key, 3);
 
             if (count($split_key) === 3 && $split_key[0] === '') {
                 $child->name = $split_key[2];
@@ -258,20 +259,21 @@ class Kint_Parser
                     $child->access = Kint_Object::ACCESS_PRIVATE;
                     $child->owner_class = $split_key[1];
                 }
+            } elseif (KINT_PHP72) {
+                $child->name = (string) $key;
             } else {
                 $child->name = $key;
-                $child->access = Kint_Object::ACCESS_PUBLIC;
             }
 
             if ($this->childHasPath($object, $child)) {
                 $child->access_path = $object->access_path;
 
-                if (is_int($child->name)) {
+                if (!KINT_PHP72 && is_int($child->name)) {
                     $child->access_path = 'array_values((array) '.$child->access_path.')['.$i.']';
                 } elseif (preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $child->name)) {
                     $child->access_path .= '->'.$child->name;
                 } else {
-                    $child->access_path .= '->{'.var_export($child->name, true).'}';
+                    $child->access_path .= '->{'.var_export((string) $child->name, true).'}';
                 }
             }
 
@@ -293,6 +295,12 @@ class Kint_Parser
         }
 
         $properties = $skip_reflector ? array() : $reflector->getProperties();
+        $pubvals = array_keys($values);
+        if (KINT_PHP72) {
+            // getProperties doesn't return integer keys, and keys are
+            // autocast in 7.2. Set them all to strings for strict checking
+            $pubvals = array_map('strval', $pubvals);
+        }
 
         foreach ($properties as $property) {
             if ($property->isStatic()) {
@@ -307,14 +315,7 @@ class Kint_Parser
                 if (array_key_exists("\0".$property->getDeclaringClass()->name."\0".$property->name, $values)) {
                     continue;
                 }
-            } elseif (in_array($property->name, array_keys($values), !KINT_PHP72)) {
-                // That's a very iffy elseif. Looks like $property->name isn't a
-                // string like it says in the docs and is actually mixed, let's
-                // hope that's true of all supported PHP versions.
-                //
-                // Additionally, PHP 7.2 casts string/int keys when casting
-                // between object and array, so we need non-strict checking
-                // above 7.1 or it will accidentally do it twice.
+            } elseif (in_array($property->name, $pubvals, true)) {
                 continue;
             }
 
@@ -340,7 +341,7 @@ class Kint_Parser
                 $child->access_path = $object->access_path;
 
                 if (is_int($child->name)) {
-                    $child->access_path = 'array_values((array) '.$child->access_path.')['.$i.']';
+                    $child->access_path = null; // Completely inaccessible if we get an int here
                 } elseif (preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $child->name)) {
                     $child->access_path .= '->'.$child->name;
                 } else {
@@ -380,11 +381,6 @@ class Kint_Parser
     private function parseUnknown(&$var, Kint_Object $o)
     {
         $o->type = 'unknown';
-
-        $rep = new Kint_Object_Representation('Unknown');
-        $rep->contents = var_export($var, true);
-        $o->addRepresentation($rep);
-
         $this->applyPlugins($var, $o, self::TRIGGER_SUCCESS);
 
         return $o;

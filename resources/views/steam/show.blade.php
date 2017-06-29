@@ -2,6 +2,8 @@
 @section('content')
   <div class="show-profile">
     @php
+    // dd($_COOKIE);
+        $steamid1 = $steamid2 = $steamid;
         $url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=23E38BACEF40A739B05B305A8487184C&steamids='.$steamid;
         $json = file_get_contents($url);
         $obj = json_decode($json);
@@ -12,7 +14,7 @@
             @php
         } else {
             $player = $player[0];
-            $country = isset($player->loccountrycode) ? strtolower($player->loccountrycode) : '';
+            $country = isset($player->loccountrycode) ? strtolower($player->loccountrycode) : 'ru';
             $date = date('d.m.Y', $player->lastlogoff);
             @endphp
             <div class="show-profile-img">
@@ -21,11 +23,62 @@
             <div class="show-profile-link">
                 <a href="{{ $player->profileurl }}" target="_blank"><img src="public/images/steamicon.png" style="width: 25px; height: 25x;">{{ $player->personaname }} </a> |
                 <img src="http://cdn.steamcommunity.com/public/images/countryflags/{{ $country }}.gif" alt=""> |
-                <a href="{{route('steam-user-comparison',[$steamid]) }}">Compare</a> |
+                {{-- <a href="{{route('steam-user-comparison',[$steamid]) }}">Compare</a>  --}}
+                <a onclick="comparing()">Compare</a>
+                <input onclick="change()" type="button" value="Add to comparison" id="comparison-button" style="border: none;
+                    background:none; outline: none; background-color: #337ab7;"></input>
                 <a href="{{route('steam-pdf-generate',[$steamid]) }}" target="_blank">Stats to PDF</a> |
                 <a href="{{route('steam-stats-graph',[$steamid]) }}" target="_blank">Stats Graph</a>
-                <h5>Last online: {{ $date }}</h5>
+                <h5>Last online: {{ $date }}</h5><div id="hidden_form_container" style="display:none;"></div>
             </div>
+            <script type="text/javascript">
+                var steamid1 = "{!! $steamid !!}";
+                var steamid2 = "{!! $steamid !!}";
+                var steamid = "{!! $steamid !!}";
+                console.log(steamid);
+                var comparisonLength = sessionStorage.length;
+                console.log(comparisonLength);
+                // document.cookie="steamid-comparison_" + (comparisonLength - 1) + "=" + steamid;
+                // document.cookie="steamid-comparison_" + (comparisonLength ) + "=" + steamid;
+
+                var compariosneProfile = '';
+                if (sessionStorage.getItem('steamid-comparison_' + (comparisonLength - 1)) == steamid) {
+                    compariosneProfile = 'steamid-comparison_' + (comparisonLength - 1);
+                    document.getElementById("comparison-button").value = 'Remove from comparison';
+                } else if (sessionStorage.getItem('steamid-comparison_' + (comparisonLength - 2)) == steamid) {
+                    compariosneProfile = 'steamid-comparison_' + (comparisonLength - 2);
+                    document.getElementById("comparison-button").value = 'Remove from comparison';
+                }
+                function change()
+                {
+                    var elem = document.getElementById("comparison-button");
+                    if (elem.value=="Add to comparison") {
+                        elem.value = "Remove from comparison";
+                        var steamid = "{!! $steamid !!}";
+                        if (comparisonLength == 2) {
+                            sessionStorage.setItem('steamid-comparison_' + (comparisonLength - 1), steamid);
+                            compariosneProfile = 'steamid-comparison_' + (comparisonLength - 1);
+                            document.cookie="steamid-comparison_" + (comparisonLength - 1) + "=" + steamid;
+                        } else {
+                            sessionStorage.setItem('steamid-comparison_' + comparisonLength, steamid);
+                            compariosneProfile = 'steamid-comparison_' + (comparisonLength);
+                            document.cookie="steamid-comparison_" + comparisonLength + "=" + steamid;
+                        }
+                    } else {
+                        elem.value = "Add to comparison";
+                        sessionStorage.removeItem(compariosneProfile);
+                    }
+                }
+                function comparing()
+                {
+                    var comparingRoute = "{{ route('steam-user-comparison',['steamid1'=>$steamid1,'steamid2'=>$steamid2]) }}";
+                    var theForm = document.createElement('form');
+                    theForm.action = comparingRoute;
+                    theForm.method = 'get';
+                    document.getElementById('hidden_form_container').appendChild(theForm);
+                    theForm.submit();
+                }
+            </script>
             @php
             $urlGameAchievements = 'http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=23E38BACEF40A739B05B305A8487184C&appid=730';
             $urlUserAchievements = 'http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid=730&key=23E38BACEF40A739B05B305A8487184C&steamid='.$steamid;
@@ -84,13 +137,15 @@
                     for(counter; counter >= 0; counter--) {
                         var lastStat = localStorage.getItem('counter_flick_' + steamid + '_' + counter);
                         if (lastStat) {
+                            lastStat = JSON.parse(lastStat);
+                            var lastUpdate = lastStat.timestamp;
+                            diff = dateUpdate - lastUpdate - 172800000;
                             break;
                         }
                     }
                 }
-                console.log(diff);
                 if (lastStat && diff > 0) {
-                    var counter = localStorage.length;
+                    var counter = localStorage.length + 1;
                     var stats = {
                         'total_kills' : {!! $userArray['total_kills'] !!},
                         'total_deaths' : {!! $userArray['total_deaths'] !!},

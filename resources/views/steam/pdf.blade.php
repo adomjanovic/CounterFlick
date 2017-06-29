@@ -7,14 +7,14 @@
     @php
         $steamid = Session::get('steam-id');
         $steamID = Session::get('steamid');
-        if (!$steamid) {
-            echo '<h3>There is no selected user for stats, find the player and select on their profile <i>Stats to PDF</i>.<br><br>
-            (You need to be sing in through Steam)</h3>';
-            return Redirect::to('steam.index');
-        }
-        if (!$steamID) {
-            $steamID = $steamid;
-        }
+        // if (!$steamid) {
+        //     echo '<h3>There is no selected user for stats, find the player and select on their profile <i>Stats to PDF</i>.<br><br>
+        //     (You need to be sing in through Steam)</h3>';
+        //     return Redirect::to('steam.index');
+        // }
+        // if (!$steamID) {
+        //     $steamID = $steamid;
+        // }
     @endphp
     <body>
         <div class="show-profile">

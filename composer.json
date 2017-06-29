@@ -6,10 +6,10 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "codedge/laravel-fpdf": "^1.2",
         "kint-php/kint": "^2.0",
         "laravel/framework": "5.4.*",
-        "laravel/tinker": "~1.0",
-        "niklasravnsborg/laravel-pdf": "^1.5"
+        "laravel/tinker": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
