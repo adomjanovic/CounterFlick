@@ -4,7 +4,11 @@ namespace App\Services;
 
 class SteamHelper
 {
+<<<<<<< HEAD
     const API_KEY = '23E38BACEF40A739B05B305A8487184C';
+=======
+    const API_KEY = 'PUT_YOUR_API_KEY_FROM_STEAM';
+>>>>>>> 8c7faa0bc646cee1462a4a554cae948529eebc27
 
     public static function findSteamPlayerUri()
     {
