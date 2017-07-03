@@ -3,34 +3,39 @@
 @include('layouts.left-sidebar')
 @include('layouts.right-sidebar')
 <div class="centar">
-@include('layouts.search-box')
-@php
-    $params = array(
-        'openid.ns'         => 'http://specs.openid.net/auth/2.0',
-        'openid.mode'       => 'checkid_setup',
-        'openid.return_to'  => 'http://localhost/counter_flick',
-        'openid.realm'      => 'http://' . $_SERVER['HTTP_HOST'],
-        'openid.identity'   => 'http://specs.openid.net/auth/2.0/identifier_select',
-        'openid.claimed_id' => 'http://specs.openid.net/auth/2.0/identifier_select',
-    );
-
-    $steamLoginUrl = 'https://steamcommunity.com/openid/login' . '?' . http_build_query($params);
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && (!empty($_POST['steamid']))) {
+    @include('layouts.search-box')
+    @php
+    if ($player) {
         @endphp
-
-            @include('steam.search-profile')
+        <div class="profile-found">
+            <img src="{{ $player->avatarmedium }}" alt="">
+            <a href="{{route('steam-user',[$player->steamid])}}"><h2>{{ $player->personaname }}</h2></a>
+        </div>
+        @php
+    } else if ($finding) {
+        @endphp
+        <div class="alert alert-info profile-not-found">
+            <p>User not found, {{ $_POST['steamid'] }} does not exist, check format of input !</p>
+        </div>
+        <div class="profile-not-found-examples">
+            <h4>Examples of input for searching </h4>
+            <li>hexerGOD</li>
+            <li>76561198185315038</li>
+            <li>http://steamcommunity.com/id/hexerGOD</li>
+            <li>http://steamcommunity.com/profiles/76561198018175469</li>
+        </div>
         @php
     }
+    
     $steamId = 0;
     if (!empty($_GET['openid_identity'])) {
         $steamidUrl = $_GET['openid_identity'];
         $steamidUrl = explode('/',$steamidUrl);
         $steamId = $steamidUrl[5];
     }
-    if($steamId && is_numeric($steamId)) {
+    if ($steamId && is_numeric($steamId)) {
         Session::put('steam-id', $steamId);
-        @endphp
-            @include('steam.search-profile')
-        @php } @endphp
+    }
+    @endphp
 </div>
 @endsection

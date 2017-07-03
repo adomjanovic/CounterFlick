@@ -130,8 +130,7 @@
 					itemclick: function (e) {
 						if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
 							e.dataSeries.visible = false;
-						}
-						else {
+						} else {
 							e.dataSeries.visible = true;
 						}
 						chart.render();
@@ -152,7 +151,7 @@
                     startAngle: 90,
                     toolTipContent: "{legendText}: {y} - <strong>#percent% </strong>",
                     showInLegend: true,
-                  explodeOnClick: false, //**Change it to true
+                    explodeOnClick: true,
                     dataPoints: [
                         {y: kill, indexLabel: "Total kills #percent% | +" + killDiff,
                             legendText: "Total kills" },
@@ -165,7 +164,6 @@
             chart.render();
             }
         </script>
-
     <div id="pie-chartContainer" style="height: 400px; width: 90%; margin: auto; padding-top: 25px"></div>
 	<div id="chartContainer" style="height: 400px; width: 90%; margin: auto; padding: 50px 0"></div>
 @endsection

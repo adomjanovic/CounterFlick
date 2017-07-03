@@ -1,6 +1,5 @@
 <div class="right-sidebar">
     <h1>News</h1>
-
     @php
     $csgonewsurl = 'http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=730&count=7&maxlength=300&format=json';
     $jsoncsgonews = file_get_contents($csgonewsurl);

@@ -7,8 +7,6 @@
         <li><a href="https://www.twitch.tv">Twitch</a></li>
         <li><a href="http://blog.counter-strike.net">Counter Strike Offical</a></li>
         <li><a href="http://store.steampowered.com">Steam</a></li>
-        <li><a href="/support">Support</a></li>
-        <li><a href="/about">About</a></li>
       </ul>
     </div>
 </footer>

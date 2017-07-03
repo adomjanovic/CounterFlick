@@ -6,79 +6,104 @@ use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
-use Fpdf;
+use App\Services\SteamHelper;
+use App\Services\FPDFHelper;
 
 class SteamController extends Controller
 {
     public function index()
     {
-        return view('steam.index');
+        $player = $finding = [];
+        return view('steam.index',compact('player', 'finding'));
     }
+
+    public function findPlayer()
+    {
+        $player = [];
+        $steamid = $_POST['steamid'];
+        $finding = true;
+        if ($steamid) {
+            $player = SteamHelper::searchPlayer($steamid);
+        }
+        return view('steam.index', compact('player', 'finding'));
+    }
+
     public function show($steamid)
     {
-        return view('steam.show', compact('steamid'));
+        $player = SteamHelper::findSteamPlayerBySteamId($steamid);
+        $statistic = [];
+        if ($player) {
+            $statistic = SteamHelper::showSteamUserProfile($player);
+        }
+        return view('steam.show', compact('player', 'statistic'));
     }
-    public function edit($steamid)
-    {
-        return view('steam.show', compact('steamid'));
-    }
+
     public function showMaps()
     {
-        return view('steam.maps', compact('steamid'));
+        $player = SteamHelper::findSteamPlayerUri();
+        $mapsStatistic = [];
+        if ($player) {
+            $userStats = SteamHelper::getUserStatForGame($player);
+            $mapsStatistic = SteamHelper::getUserStatForGameByMap($userStats);
+        }
+        return view('steam.maps', compact('player', 'mapsStatistic'));
     }
+
     public function showAchievements()
     {
-        return view('steam.achievements', compact('steamid'));
+        $player = SteamHelper::findSteamPlayerUri();
+        $achievementsStatistic = [];
+        if ($player) {
+            $userAchievements = SteamHelper::getUserAchievements($player);
+            $gameAchievements = SteamHelper::getGlobalStatsAchievements();
+            $achievementsStatistic = SteamHelper::getUserStatForGameAchievements($userAchievements, $gameAchievements);
+        }
+        return view('steam.achievements', compact('player', 'achievementsStatistic'));
     }
+
     public function showWeapons()
     {
-        return view('steam.weapons', compact('steamid'));
+        $player = SteamHelper::findSteamPlayerUri();
+        $weaponStatistic = [];
+        if ($player) {
+            $statistic = SteamHelper::getUserStatForGame($player);
+            $weaponStats = $statistic->playerstats->stats;
+            $weaponStatistic = SteamHelper::getUserStatForGameWeapons($weaponStats);
+        }
+        return view('steam.weapons', compact('player', 'weaponStatistic'));
     }
-    public function comparison($steamid1 = 0, $steamid2 = 0)
+
+    public function comparison($steamid)
     {
-        return view('steam.profile-comparison', compact('steamid1', 'steamid2'));
+        $player1 = SteamHelper::findSteamPlayerBySteamId($steamid);
+        $checkForComparison = SteamHelper::checkForComparison();
+        $player2 = $comparison = [];
+        if ($checkForComparison) {
+            $player1 = SteamHelper::findSteamPlayerBySteamId($_COOKIE['steamid-comparison_0']);
+            $player2 = SteamHelper::findSteamPlayerBySteamId($_COOKIE['steamid-comparison_1']);
+        }
+        if ($player1 && $player2) {
+            $userStats1 = SteamHelper::getUserStatForGame($player1);
+            $userStats2 = SteamHelper::getUserStatForGame($player2);
+            $comparison = SteamHelper::getPlayersComparison($userStats1, $userStats2);
+        }
+        return view('steam.profile-comparison', compact('player1', 'player2','comparison'));
     }
+
     public function logout()
     {
         Session::forget('steam-id');
         return Redirect::to(Session::get('page'));
     }
+
     public function generatePdf($steamid)
     {
-        $steamID = $steamid;
-        $url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=23E38BACEF40A739B05B305A8487184C&steamids='.$steamID;
-        $json = file_get_contents($url);
-        $obj = json_decode($json);
-        $player = $obj->response->players;
-        $player = $player[0];
-        $country = isset($player->loccountrycode) ? strtolower($player->loccountrycode) : 'ru';
-        $date = date('d.m.Y', $player->lastlogoff);
-        $img = $player->avatarfull;
-        $name =  $player->personaname;
-        $urlUserStatForGame = 'http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=730&key=23E38BACEF40A739B05B305A8487184C&steamid='.$steamID;
-        $jsonUserStats = file_get_contents($urlUserStatForGame);
-        $objUserStats = json_decode($jsonUserStats);
-        $userStats = $objUserStats->playerstats->stats;
-        foreach ($userStats as $stat) {
-            $userArray[$stat->name] = $stat->value;
-        }
-        $pdf = new Fpdf();
-        $pdf::Ln();
-        $pdf::AddPage();
-        $pdf::SetFont('Times','B',22);
-        $pdf::Cell(0,10, $name, 0,"","C");
-        $pdf::Image($img,150,20,50);
-        $pdf::Ln();
-        $pdf::SetFont('Times','',12);
-        $i = 0;
-        foreach ($userArray as $stat => $value) {
-            $pdf::cell(100,10,$stat,1,0,"L");
-            $pdf::cell(30,10,$value,1,0,"L");
-            $pdf::Ln();
-        }
-        $pdf::Output();
-        exit;
+        $player = SteamHelper::findSteamPlayerBySteamId($steamid);
+        $fpdfData = SteamHelper::prepareFPDFStatistic($player, $steamid);
+        FPDFHelper::showPDFStatistic($fpdfData);
+        exit();
     }
+
     public function showStatsGraph($steamid)
     {
         return view('steam.show-graph', compact('steamid'));
