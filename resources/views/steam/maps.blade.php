@@ -1,0 +1,35 @@
+@extends('layouts.master')
+@section('content')
+    <div class="show-profile">
+        <ol class="all-results">
+        @php
+        if (!$player) {
+            $uri = explode('/', $_SERVER['REQUEST_URI']);
+            $steamid = $uri[2];
+            @endphp
+                <p>Korisnik sa Steam ID-om {{ $steamid }} ne postoji!</p>
+            @php
+        } else {
+            @endphp
+            <div class="show-profile-full">
+                <img src="{{ $player->avatarmedium }}" >
+                <a href="{{route('steam-user',[$player->steamid])}}"><h3>Back to profile stats</h3></a>
+                <h5>{{ $player->personaname }} | Last online: {{ date('d.m.Y',$player->lastlogoff) }}</h5>
+            </div>
+            @php
+            foreach ($mapsStatistic['user_Array'] as $map => $value) {
+                @endphp
+                    <li class="item">
+                        <img src="{{ asset('public/images/maps') }}/{{ $map }}.png">
+                        <h4>{{ $map }}</h4>
+                        <h5>Rounds win <b>{{ $value }}</b></h5>
+                        Rounds played <b>{{ $mapsStatistic['total_Rounds'][$map] }}</b>
+                        Win % <b>{{ round(($value/$mapsStatistic['total_Rounds'][$map]) * 100 , 2) }} %</b>
+                    </li>
+                @php
+            }
+        }
+        @endphp
+        </ol>
+    </div>
+@endsection
