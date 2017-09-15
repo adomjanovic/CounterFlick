@@ -75,6 +75,7 @@
         if ($steamid == Session::get('steam-id')) {
             @endphp
             <script type="text/javascript">
+                var twoDaysSeconds = 172800000;
                 var dateUpdate = Date.now();
                 var steamid = {!! $steamid !!};
                 var counter = localStorage.length - 1;
@@ -83,14 +84,14 @@
                 if (lastStat && counter != -1) {
                     lastStat = JSON.parse(lastStat);
                     var lastUpdate = lastStat.timestamp;
-                    diff = dateUpdate - lastUpdate - 172800000;
+                    diff = dateUpdate - lastUpdate - twoDaysSeconds;
                 } else if (!lastStat && counter != -1) {
                     for(counter; counter >= 0; counter--) {
                         var lastStat = localStorage.getItem('counter_flick_' + steamid + '_' + counter);
                         if (lastStat) {
                             lastStat = JSON.parse(lastStat);
                             var lastUpdate = lastStat.timestamp;
-                            diff = dateUpdate - lastUpdate - 172800000;
+                            diff = dateUpdate - lastUpdate - twoDaysSeconds;
                             break;
                         }
                     }

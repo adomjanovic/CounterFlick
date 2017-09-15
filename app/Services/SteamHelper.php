@@ -4,16 +4,13 @@ namespace App\Services;
 
 class SteamHelper
 {
-<<<<<<< HEAD
     const API_KEY = '23E38BACEF40A739B05B305A8487184C';
-=======
-    const API_KEY = 'PUT_YOUR_API_KEY_FROM_STEAM';
->>>>>>> 8c7faa0bc646cee1462a4a554cae948529eebc27
-
+    //const API_KEY = 'PUT_YOUR_API_KEY_FROM_STEAM';
     public static function findSteamPlayerUri()
     {
+        $userInfoPosition = 2;
         $uri = explode('/', $_SERVER['REQUEST_URI']);
-        $steamid = $uri[2];
+        $steamid = $uri[$userInfoPosition];
         $url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='.self::API_KEY.'&steamids='.$steamid;
         $json = file_get_contents($url);
         $obj = json_decode($json);
@@ -77,6 +74,8 @@ class SteamHelper
 
     public static function getUserStatForGameByMap($userStats)
     {
+        $statWinsPosition = 15;
+        $statRoundsPosition = 17;
         $mapData = $userArray = $totalRounds = [];
         $userStats = $userStats->playerstats->stats;
         foreach ($userStats as $stat) {
@@ -84,11 +83,11 @@ class SteamHelper
                 if(strpos($stat->name,'total_wins_map_de_house') !== false) {
                     $userArray['cs_militia'] = 1;
                 } else {
-                    $userArray[substr($stat->name, 15)] = $stat->value;
+                    $userArray[substr($stat->name, $statWinsPosition)] = $stat->value;
                 }
             }
             if(strpos($stat->name,'total_rounds_map') !== false) {
-                $totalRounds[substr($stat->name, 17)] = $stat->value;
+                $totalRounds[substr($stat->name, $statRoundsPosition)] = $stat->value;
             }
         }
         arsort($userArray);
@@ -103,21 +102,23 @@ class SteamHelper
     public static function getUserStatForGameWeapons($weaponStats)
     {
         $weaponStatistic = [];
+        $statShotsPosition = 11;
+        $statHitsPosition = 12;
         $totalHits['molotov'] = $totalHits['taser'] = $totalHits['hegrenade'] = $totalHits['knife'] = $totalHits['knife_fight'] = 0;
         $totalFired['molotov'] = $totalFired['taser'] = $totalFired['hegrenade'] = $totalFired['knife_fight'] = $totalFired['knife'] = 1;
         foreach ($weaponStats as $stat) {
             if(strpos($stat->name,'total_kills_') !== false) {
                 if(!($stat->name == 'total_kills_headshot' || $stat->name == 'total_kills_enemy_weapon' ||
                 $stat->name == 'total_kills_enemy_blinded' || $stat->name == 'total_kills_against_zoomed_sniper')) {
-                    $weaponKills[substr($stat->name,12)] = $stat->value;
+                    $weaponKills[substr($stat->name,$statHitsPosition)] = $stat->value;
                 }
             }
             if(strpos($stat->name,'total_hits_') !== false) {
-                $totalHits[substr($stat->name,11)] = $stat->value;
+                $totalHits[substr($stat->name,$statShotsPosition)] = $stat->value;
             }
             if(strpos($stat->name,'total_shots_') !== false) {
                 if(!($stat->name == 'total_shots_hit' || $stat->name == 'total_shots_fired')) {
-                    $totalFired[substr($stat->name,12)] = $stat->value;
+                    $totalFired[substr($stat->name,$statHitsPosition)] = $stat->value;
                 }
             }
         }
@@ -315,10 +316,11 @@ class SteamHelper
         $armsRaceDemolitionUnachieved = $weaponSpecialistUnachieved = $globalExpertiseUnachieved =
         $combatSkillsUnachieved = $teamTacticsUnachieved = [];
         $i = $j = 0;
+        $numberOfAchievements = 167;
         $achived = 0;
         $noAchived = [];
         $arrayAchievements = [];
-        for ($i = 0; $i < 167; $i++) {
+        for ($i = 0; $i < $numberOfAchievements; $i++) {
             $arrayAchievements[$userAchievements[$i]->apiname] = [
                 'displayName' => $gameAchievements[$i]->displayName,
                 'description' => $gameAchievements[$i]->description,
@@ -361,9 +363,7 @@ class SteamHelper
                 foreach ($userStats->playerstats->stats as $stat) {
                     $userArray[$stat->name] = $stat->value;
                 }
-                $fpdfData[] = [
-
-                ];
+                $fpdfData[] = [];
             }
         }
         $fpdfData = [
@@ -474,6 +474,8 @@ class SteamHelper
         if (!$userStats) {
             return [];
         }
+        $statKillsPositionName = 12;
+        $statWinsPositionName = 15;
         $totalKills['value'] = $totalWins['value'] = 0;
         $totalKills['name'] = $totalWins['name'] = '';
         foreach ($userStats->playerstats->stats as $stat) {
@@ -487,8 +489,8 @@ class SteamHelper
             }
             $userArray[$stat->name] = $stat->value;
         }
-        $totalKills['name'] = substr($totalKills['name'], 12);
-        $totalWins['name'] = substr($totalWins['name'], 15);
+        $totalKills['name'] = substr($totalKills['name'], $statKillsPositionName);
+        $totalWins['name'] = substr($totalWins['name'], $statWinsPositionName);
         $userData = [
             'total_kills' => $totalKills,
             'total_wins' => $totalWins,
@@ -499,6 +501,8 @@ class SteamHelper
 
     public static function searchPlayer($steamId)
     {
+        $stringSearchStart = 10;
+        $stringSearchLength = 17;
         $url = $obj = $player = '';
         if (is_numeric($steamId)) {
             $player = self::findSteamPlayerBySteamId($steamId);
@@ -508,7 +512,7 @@ class SteamHelper
                 $string = file_get_contents("http://steamcommunity.com/id/".$steamId);
                 if (strpos($string, 'steamid') !== false) {
                     $seedString = "steamid";
-                    $sub= substr($string,strpos($string,$seedString)+10,17);
+                    $sub= substr($string,strpos($string,$seedString)+$stringSearchStart,$stringSearchLength);
                     if (is_numeric($sub)) {
                         $player = self::findSteamPlayerBySteamId($sub);
                     }
@@ -526,7 +530,7 @@ class SteamHelper
                 $string = file_get_contents("http://steamcommunity.com/id/".$sub);
                 if (strpos($string, 'steamid') !== false) {
                     $seedString = "steamid";
-                    $sub= substr($string,strpos($string,$seedString)+10,17);
+                    $sub= substr($string,strpos($string,$seedString)+$stringSearchStart,$stringSearchLength);
                     if (is_numeric($sub)) {
                         $player = self::findSteamPlayerBySteamId($sub);
                     }

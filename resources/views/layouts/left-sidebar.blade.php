@@ -1,4 +1,6 @@
-<div class="left-sidebar">
+<div class="row">
+  <div class="col">
+      <div class="left-sidebar">
     <h1>Features</h1>
     <h4>ACHIEVEMENTS</h4>
     <p>how much you got them</p>
@@ -15,6 +17,7 @@
     <h4>SHARE STATISTIC*</h4>
     <p>share on social networks or print for yourself</p>
     <div class="disclaimer">
-    <h4>* STEAM LOGIN NEEDED</h4>
+        <h4>* STEAM LOGIN NEEDED</h4>
     </div>
+  </div>
 </div>

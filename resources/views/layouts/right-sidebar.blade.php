@@ -1,4 +1,6 @@
-<div class="right-sidebar">
+<div class="row">
+  <div class="col-2">
+      <div class="right-sidebar">
     <h1>News</h1>
     @php
     $csgonewsurl = 'http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=730&count=7&maxlength=300&format=json';
@@ -14,4 +16,6 @@
         @php
     }
     @endphp
+</div>
+</div>
 </div>
