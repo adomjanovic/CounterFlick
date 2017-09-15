@@ -8,8 +8,13 @@ class SteamHelper
     //const API_KEY = 'PUT_YOUR_API_KEY_FROM_STEAM';
     public static function findSteamPlayerUri()
     {
-        $userInfoPosition = 4;
-        $uri = explode('/', $_SERVER['HTTP_REFERER']);
+        $host = apache_request_headers();
+        if ($host['Host'] === 'counterflick.herokuapp.com') {
+            $userInfoPosition = 1;
+        } else {
+            $userInfoPosition = 2;
+        }
+        $uri = explode('/', $_SERVER['REQUEST_URI']);
         $steamid = $uri[$userInfoPosition];
         $url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='.self::API_KEY.'&steamids='.$steamid;
         $json = file_get_contents($url);
