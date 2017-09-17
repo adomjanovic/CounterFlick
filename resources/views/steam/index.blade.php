@@ -26,7 +26,7 @@
         </div>
         @php
     }
-    
+
     $steamId = 0;
     if (!empty($_GET['openid_identity'])) {
         $steamidUrl = $_GET['openid_identity'];

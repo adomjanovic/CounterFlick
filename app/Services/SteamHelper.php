@@ -508,7 +508,7 @@ class SteamHelper
             $player = self::findSteamPlayerBySteamId($steamId);
         } else {
             // ako imamo samo ime -> hexerGOD
-            if (!preg_match('/[\'^£$%&*()}{@#~?><>.,|=+¬-]/', $steamId)) {
+            if (!preg_match('/[\'^£$%&*()}{@#~?><>., |=+¬-]/', $steamId)) {
                 $string = file_get_contents("http://steamcommunity.com/id/".$steamId);
                 if (strpos($string, 'steamid') !== false) {
                     $seedString = "steamid";
