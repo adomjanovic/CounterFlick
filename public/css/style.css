@@ -522,14 +522,14 @@ th {
 
     .left-sidebar {
         position: absolute;
-        visibility: hidden;
+        display: none;
         float:none;
         z-index: -1;
     }
 
     .right-sidebar {
         position: absolute;
-        visibility: hidden;
+        display: none;
         float:none;
         z-index: -1;
     }
@@ -556,7 +556,7 @@ th {
     }
 
     .centar .profile-not-found {
-        width: 300px;
+        width: 280px;
         position: relative;
         top: 80px;
         left: 50%;
@@ -611,7 +611,7 @@ th {
 
     #footer .footer-centar-row {
         margin: auto;
-        padding-top: 260px;
+        padding-top: 20px;
     }
 }
 
@@ -636,26 +636,18 @@ th {
         z-index: -1;
     }
 
-    .container .left-sidebar {
-        width: 100%;
-        padding: 10px 0 0 15px;
+    .left-sidebar {
         position: absolute;
-        top: 430px;
+        display: none;
+        float:none;
+        z-index: -1;
     }
 
-    .container .left-sidebar>p {
-        display: inline;
-    }
-
-    .container .right-sidebar>p {
-        display: inline;
-    }
-
-    .container .right-sidebar {
-        width: 100%;
-        padding: 10px 0 0 25px;
+    .right-sidebar {
         position: absolute;
-        top: 600px;
+        display: none;
+        float:none;
+        z-index: -1;
     }
     .centar .search-box {
         width: 400px;
@@ -668,7 +660,7 @@ th {
 
     #footer .footer-centar-row {
         margin: auto;
-        padding-top: 260px;
+        padding-top: 460px;
     }
 
     .centar .profile-found {
