@@ -8,17 +8,17 @@
             <img src="{{ $player1->avatarmedium }}" >
             <a href="{{route('steam-user',[$player1->steamid])}}"><h3>Back to profile stats</h3></a>
         </div>
-        <h1>Comparison</h1>
+        <h1>Player's comparison</h1>
         <table class="comparison-table">
             <tr>
-                <td class="profile-found">
+                <th class="images">
                     <img src="{{ $player1->avatarmedium }}" alt="">
                     <a href="{{route('steam-user',[$player1->steamid])}}"><h2>{{ $player1->personaname }}</h2></a>
-                </td>
-                <td class="profile-found">
+                </th>
+                <th class="images">
                     <img src="{{ $player2->avatarmedium }}" alt="">
                     <a href="{{route('steam-user',[$player2->steamid])}}"><h2>{{ $player2->personaname }}</h2></a>
-                </td>
+                </th>
             </tr>
             @php for($i = 0; $i <= 20; $i++) { @endphp
             <tr>

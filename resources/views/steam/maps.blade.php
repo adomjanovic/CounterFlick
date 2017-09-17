@@ -7,13 +7,13 @@
             $uri = explode('/', $_SERVER['REQUEST_URI']);
             $steamid = $uri[2];
             @endphp
-                <p>Korisnik sa Steam ID-om {{ $steamid }} ne postoji!</p>
+                <h2>User with Steam ID: {{ $steamid }} does not play shared game or his profile have private settings !</h2>
             @php
         } else {
             @endphp
             <div class="show-profile-full">
                 <img src="{{ $player->avatarmedium }}" >
-                <a href="{{route('steam-user',[$player->steamid])}}"><h3>Back to profile stats</h3></a>
+                <a href="{{route('steam-user',[$player->steamid])}}"><h3>Back to profile</h3></a>
                 <h5>{{ $player->personaname }} | Last online: {{ date('d.m.Y',$player->lastlogoff) }}</h5>
             </div>
             @php

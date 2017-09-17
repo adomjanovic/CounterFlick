@@ -9,21 +9,27 @@
     <h3>ACCURACY%: </h3><p>{{ round($statistic['user_Array']['total_shots_hit']/$statistic['user_Array']['total_shots_fired'] * 100 ,2) }} %</p>
 </div>
 
-<div class="column-left">
+<div class="column-left main-statistics">
     <a href="{{route('steam-user-achievements',[$steamid])}}">
-        <h2>ACHIEVEMENTS</h2>
+        <div class="image-text">
+            <h2>Achievements stats</h2>
+        </div>
         <img src="{{ asset('public/images/achievements') }}.png" alt="">
     </a>
 </div>
-<div class="column-right">
+<div class="column-right main-statistics">
     <a href="{{route('steam-user-maps',[$steamid])}}">
-        <h2>MAP STATISTIC</h2>
+        <div class="image-text">
+            <h2>Map stats</h2>
+        </div>
         <img src="{{ asset('public/images/csgomaps.png') }}" alt="">
     </a>
 </div>
-<div class="column-centar">
+<div class="column-centar main-statistics">
     <a href="{{route('steam-user-weapons',[$steamid])}}">
-        <h2>WEAPON STATISTIC</h2>
+        <div class="image-text">
+            <h2>Weapon stats</h2>
+        </div>
         <img src="{{ asset('public/images/weapon.png') }}" alt="">
     </a>
 </div>

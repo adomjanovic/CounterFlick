@@ -1,9 +1,9 @@
 <header id="header" class="clearfix">
     <a href="{{ route('main-page') }}">
-        <img src="{{ asset('public/images/csgo-header.jpg') }}" style="width 100px; height:100px;">
+        <img src="{{ asset('public/images/csgo-header.jpg') }}" class="header-logo">
     </a>
     <h1 class="blog-title">COUNTER FLICK</h1>
-    <p>find player statistic from Counter Strike: Global Offensive</p>
+    <p class="header-info">find player statistic from Counter Strike: Global Offensive</p>
     @php
     $page = 'http://localhost' . $_SERVER['REQUEST_URI'];
     $steamidSession = Session::get('steam-id');
@@ -11,7 +11,7 @@
             Session::put('page', $page);
             @endphp
                 <a href="{{ route('steam-logout') }}">
-                    <img src="{{ asset('public/images/steam.png') }}" style="width 20px; align:right; height:50px;">Sing out
+                    <p>Sing out</p>
                 </a>
             @php
         } else {
@@ -26,7 +26,7 @@
             $steamLoginUrl = 'https://steamcommunity.com/openid/login' . '?' . http_build_query($params);
         @endphp
             <a href="{{ $steamLoginUrl }}">
-                <img src="{{ asset('public/images/steam.png') }}" style="width 20px; height:50px;">Sing in
+                <img src="{{ asset('public/images/steam.png') }}" class="steam-logon">
             </a>
         @php }
     @endphp

@@ -6,7 +6,7 @@
         $uri = explode('/', $_SERVER['REQUEST_URI']);
         $steamid = $uri[2];
     @endphp
-        <p>Korisnik sa Steam ID-om {{ $steamid }} ne postoji!</p>
+        <h2>User with Steam ID: {{ $steamid }} does not play shared game or his profile have private settings !</h2>
     @php
     } else {
         $armsRaceDemolitionUnachieved = $weaponSpecialistUnachieved = $globalExpertiseUnachieved =
@@ -17,7 +17,7 @@
     @endphp
         <div class="show-profile-full">
             <img src="{{ $player->avatarmedium }}" >
-            <a href="{{route('steam-user',[$player->steamid])}}"><h3>Back to profile stats</h3></a>
+            <a href="{{route('steam-user',[$player->steamid])}}"><h3>Back to profile</h3></a>
             <h5>{{ $player->personaname }} | Last online: {{ date('d.m.Y',$player->lastlogoff) }}</h5>
         </div>
         <div class="tab">
@@ -29,22 +29,22 @@
           <button class="tablinks" onclick="showAchievements(event, 'Arms Race')">Arms Race and Demolition</button>
         </div>
         <div id="All" class="tabcontent">
-            @include('achievements.all-achievements');
+            @include('achievements.all-achievements')
         </div>
         <div id="Team Tactics" class="tabcontent">
-            @include('achievements.team-tactics');
+            @include('achievements.team-tactics')
         </div>
         <div id="Combat Skills" class="tabcontent">
-            @include('achievements.combat');
+            @include('achievements.combat')
         </div>
         <div id="Weapon Specialist" class="tabcontent">
-            @include('achievements.weapon');
+            @include('achievements.weapon')
         </div>
         <div id="Global Expertise" class="tabcontent">
-            @include('achievements.global');
+            @include('achievements.global')
         </div>
         <div id="Arms Race" class="tabcontent">
-            @include('achievements.arms-race-demolition');
+            @include('achievements.arms-race-demolition')
         </div>
         <script>
         function showAchievements(evt, category) {
