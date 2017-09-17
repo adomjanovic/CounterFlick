@@ -11,7 +11,7 @@ a:focus, a:hover{
 .container {
     position: relative;
     width: 95%;
-    height: 90%;*/
+    height: 90%;
     background-color: #222c32;
     color: #cecccc;
     /*margin: 0;*/
@@ -492,32 +492,24 @@ th {
 /* Media querys */
 
 @media only screen and (max-width : 481px) {
-    .container {
-        width: 100%;
-
-    }
     #header h1 {
-        position: absolute;
-        visibility: hidden;
-        float:none;
-        z-index: -1;
+        font-size: 18px;
     }
     #header .header-logo {
-        width: 250px;
-        margin-left: 50px;
+        width: 150px;
     }
     #header .steam-logon {
-        position: absolute;
-        visibility: hidden;
-        float:none;
+        display: none;
         z-index: -1;
     }
     .header-info {
         position: absolute;
         visibility: hidden;
+        display: inline;
         float:none;
         z-index: -1;
     }
+
     .left-sidebar {
         position: absolute;
         visibility: hidden;
@@ -541,7 +533,7 @@ th {
     }
 
     .centar .profile-found {
-        width: 400px;
+        width: 300px;
         position: relative;
         top: 100px;
         left: 50%;
@@ -554,7 +546,7 @@ th {
     }
 
     .centar .profile-not-found {
-        width: 400px;
+        width: 300px;
         position: relative;
         top: 80px;
         left: 50%;
@@ -562,7 +554,7 @@ th {
     }
 
     .centar .profile-not-found-examples {
-        width: 400px;
+        width: 300px;
         position: relative;
         top: 100px;
         left: 55%;
