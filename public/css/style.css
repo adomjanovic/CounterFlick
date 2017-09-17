@@ -504,7 +504,7 @@ th {
     }
     #header .header-logo {
         width: 250px;
-        margin-left: 80px;
+        margin-left: 50px;
     }
     #header .steam-logon {
         position: absolute;
@@ -532,7 +532,7 @@ th {
         z-index: -1;
     }
     .centar .search-box {
-        width: 400px;
+        width: 300px;
         position: relative;
         top: 100px;
         padding-bottom: 20px;
