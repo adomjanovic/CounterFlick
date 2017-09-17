@@ -18,8 +18,9 @@ class FPDFHelper
             $pdf::Ln();
             $pdf::SetFont('Times','',12);
             foreach ($fpdfData['user_Array'] as $stat => $value) {
-                $pdf::cell(100,10,$stat,1,0,"L");
-                $pdf::cell(30,10,$value,1,0,"L");
+                $pdf::SetFillColor(230,230,230);
+                $pdf::cell(100,10,$stat,1,0,"L", TRUE);
+                $pdf::cell(30,10,$value,1,0,"L", TRUE);
                 $pdf::Ln();
             }
         }

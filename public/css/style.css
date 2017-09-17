@@ -10,7 +10,7 @@ a:focus, a:hover{
 
 .container {
     position: relative;
-    /*width: 90%;*/
+    width: 95%;
     height: 90%;*/
     background-color: #222c32;
     color: #cecccc;
@@ -29,10 +29,12 @@ a:focus, a:hover{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    margin: 10px;
 }
 
 .centar .search-box h2 {
     text-align: center;
+    margin: 10px;
 }
 
 .centar .search-box form {
@@ -490,6 +492,10 @@ th {
 /* Media querys */
 
 @media only screen and (max-width : 481px) {
+    .container {
+        width: 100%;
+
+    }
     #header h1 {
         position: absolute;
         visibility: hidden;

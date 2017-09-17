@@ -361,7 +361,7 @@ class SteamHelper
                 $img = $player->avatarfull;
                 $status = 2;
                 foreach ($userStats->playerstats->stats as $stat) {
-                    $userArray[$stat->name] = $stat->value;
+                    $userArray[strtoupper(str_replace('_',' ',$stat->name))] = $stat->value;
                 }
                 $fpdfData[] = [];
             }
