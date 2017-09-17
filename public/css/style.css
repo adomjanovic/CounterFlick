@@ -24,6 +24,7 @@ a:focus, a:hover{
     left: 50%;
     transform: translate(-50%, -50%);
     margin: 10px;
+    z-index: 10;
 }
 
 .centar .search-box h2 {
@@ -46,6 +47,7 @@ a:focus, a:hover{
     background: rgba(11,179,214,.05);
     background-image: -webkit-radial-gradient(50% 100%,circle farthest-side,rgba(11,179,214,.05),rgba(11,179,214,0));
     background-image: radial-gradient(circle farthest-side at 50% 100%,rgba(11,179,214,.05),rgba(11,179,214,0));
+    z-index: 10;
 }
 
 .centar .profile-not-found {
@@ -69,6 +71,7 @@ a:focus, a:hover{
     display: inline-block;
     text-decoration: none;
     padding-left: 10px;
+    z-index: 10;
 }
 .container .left-sidebar {
     width: 20%;
@@ -540,6 +543,7 @@ th {
         padding-bottom: 20px;
         left: 50%;
         transform: translate(-50%, -50%);
+        z-index: 10;
     }
 
     .centar .profile-found {
@@ -548,11 +552,13 @@ th {
         top: 100px;
         left: 50%;
         transform: translate(-50%, -50%);
+        z-index: 10;
     }
 
     .centar .profile-found a {
         display: inline-block;
         text-decoration: none;
+        z-index: 10;
     }
 
     .centar .profile-not-found {
@@ -656,6 +662,7 @@ th {
         padding-bottom: 20px;
         left: 50%;
         transform: translate(-50%, -50%);
+        z-index: 10;
     }
 
     #footer .footer-centar-row {
@@ -669,11 +676,13 @@ th {
         top: 350px;
         left: 50%;
         transform: translate(-50%, -50%);
+        z-index: 10;
     }
 
     .centar .profile-found a {
         display: inline-block;
         text-decoration: none;
+        z-index: 10;
     }
 
     .centar .profile-not-found {
