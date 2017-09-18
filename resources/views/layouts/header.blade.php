@@ -5,10 +5,14 @@
     <h1 class="blog-title">COUNTER FLICK</h1>
     <p class="header-info">find player statistic from Counter Strike: Global Offensive</p>
     @php
-    $page = 'http://localhost' . $_SERVER['REQUEST_URI'];
+    if ($_SERVER['HTTP_HOST'] == 'localhost') {
+        $path = 'http://localhost/counter_flick';
+    } else {
+        $path = 'http://counterflick.herokuapp.com';
+    }
     $steamidSession = Session::get('steam-id');
         if ($steamidSession) {
-            Session::put('page', $page);
+            Session::put('page', $path);
             @endphp
                 <a href="{{ route('steam-logout') }}">
                     <p>Sing out</p>
@@ -18,7 +22,7 @@
             $params = array(
                 'openid.ns'         => 'http://specs.openid.net/auth/2.0',
                 'openid.mode'       => 'checkid_setup',
-                'openid.return_to'  => 'http://localhost/counter_flick',
+                'openid.return_to'  => $path,
                 'openid.realm'      => 'http://' . $_SERVER['HTTP_HOST'],
                 'openid.identity'   => 'http://specs.openid.net/auth/2.0/identifier_select',
                 'openid.claimed_id' => 'http://specs.openid.net/auth/2.0/identifier_select',
