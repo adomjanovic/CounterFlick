@@ -34,8 +34,13 @@
                     kill = numOfStat[i].total_kills;
                     death = numOfStat[i].total_deaths;
                 }
-                killDiff = numOfStat[i-1].total_kills - numOfStat[i-2].total_kills;
-                deathDiff = numOfStat[i-1].total_deaths - numOfStat[i-2].total_deaths;
+                if ((i-2) >= 0) {
+                    killDiff = numOfStat[i-1].total_kills - numOfStat[i-2].total_kills;
+                    deathDiff = numOfStat[i-1].total_deaths - numOfStat[i-2].total_deaths;
+                } else {
+                    killDiff = numOfStat[i-1].total_kills;
+                    deathDiff = numOfStat[i-1].total_deaths;
+                }
             }
 			var chart = new CanvasJS.Chart("chartContainer", {
 				title: {
