@@ -1,13 +1,13 @@
 # README #
 
-Ukratko da bi projekt radio:
 
-* u app/Services/SteamHelper
+Setup:
 
-treba za API_KEY posataviti vlastiti koji se dobije preko Steam-a, treba biti registrirani korisnik Steam-a
+* download/clone this repository
 
-* u terminalu pokrenuti ...(instalirati ce potrebne dependencie)
+* in app/Services/SteamHelper put Steam API_KEY, you need to be Steam user, follow this https://steamcommunity.com/dev
 
-composer install
+* start the terminal ... (install necessary dependencies) composer install
 
-*  .env datoteku dodati (.env.example u projektu moze se konfigurirati prema njoj)
+* add .env file (.env.example in the project can be configured according to it)
+
