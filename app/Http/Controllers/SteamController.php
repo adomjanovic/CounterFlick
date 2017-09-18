@@ -67,7 +67,11 @@ class SteamController extends Controller
         $weaponStatistic = [];
         if ($player) {
             $statistic = SteamHelper::getUserStatForGame($player);
-            $weaponStats = $statistic->playerstats->stats;
+            if ($statistic) {
+                $weaponStats = $statistic->playerstats->stats;
+            } else {
+                $weaponStats = [];
+            }
             $weaponStatistic = SteamHelper::getUserStatForGameWeapons($weaponStats);
         }
         return view('steam.weapons', compact('player', 'weaponStatistic'));

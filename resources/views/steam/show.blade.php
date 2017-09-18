@@ -4,7 +4,8 @@
     @php
     if (!$player || !$statistic) {
         $uri = explode('/', $_SERVER['REQUEST_URI']);
-        $steamid = $uri[2];
+        $userInfoPosition = count($uri) - 1;
+        $steamid = $uri[$userInfoPosition];
     @endphp
         <h2>User with Steam ID: {{ $steamid }} does not play shared game or his profile have private settings !</h2>
     @php

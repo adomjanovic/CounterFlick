@@ -57,10 +57,14 @@ class SteamHelper
     {
         $steamid = $player->steamid;
         $urlUserAchievements = 'http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid=730&key='.self::API_KEY.'&steamid='.$steamid;
-        $jsonUser = file_get_contents($urlUserAchievements);
-        $objUser = json_decode($jsonUser);
-        $userAchievements = $objUser->playerstats->achievements;
-        return $userAchievements;
+        if (@file_get_contents($urlUserAchievements) === false) {
+            return [];
+        } else {
+            $jsonUser = file_get_contents($urlUserAchievements);
+            $objUser = json_decode($jsonUser);
+            $userAchievements = $objUser->playerstats->achievements;
+            return $userAchievements;
+        }
     }
 
     public static function getGlobalStatsAchievements()
@@ -74,6 +78,9 @@ class SteamHelper
 
     public static function getUserStatForGameByMap($userStats)
     {
+        if (!$userStats) {
+            return [];
+        }
         $statWinsPosition = 15;
         $statRoundsPosition = 17;
         $mapData = $userArray = $totalRounds = [];
@@ -101,6 +108,9 @@ class SteamHelper
 
     public static function getUserStatForGameWeapons($weaponStats)
     {
+        if (!$weaponStats) {
+            return [];
+        }
         $weaponStatistic = [];
         $statShotsPosition = 11;
         $statHitsPosition = 12;
@@ -135,6 +145,9 @@ class SteamHelper
 
     public static function getUserStatForGameAchievements($userAchievements, $gameAchievements)
     {
+        if (!$userAchievements) {
+            return [];
+        }
         $achievementsData = [];
         $teamTactics = [
             'MEDALIST' => 'Awardist',
